@@ -6,11 +6,11 @@ const corsHeaders = {
 };
 
 const stylePrompts: Record<string, string> = {
-  dad: "Create a wholesome dad joke with a groan-worthy pun. It should be family-friendly and make people roll their eyes while smiling.",
-  sarcastic: "Create a sarcastic, dry-wit joke. Use irony and deadpan humor. Be clever and subtly cutting.",
-  absurd: "Create an absurd, surreal joke. The humor should come from unexpected and bizarre connections. Be weird and surprising.",
-  dark: "Create a dark humor joke that's edgy but still tasteful. Push boundaries cleverly without being offensive or crude.",
-  oneliner: "Create a quick one-liner zinger. It should be punchy, memorable, and land immediately.",
+  dad: "Create a classic dad joke with a groan-worthy pun. Make it cheesy and delightfully terrible.",
+  sarcastic: "Create a brutally sarcastic joke. Be savage, cutting, and unapologetically dry. Don't hold back on the wit.",
+  absurd: "Create a completely unhinged, absurdist joke. Go full surreal - the weirder and more unexpected, the better. Break logic.",
+  dark: "Create a dark humor joke that pushes boundaries. Be edgy, provocative, and fearless. Taboo topics welcome - death, failure, existential dread. Make it uncomfortably funny.",
+  oneliner: "Create a razor-sharp one-liner. Punchy, memorable, and savage. No fluff.",
 };
 
 serve(async (req) => {
@@ -40,15 +40,24 @@ serve(async (req) => {
 
     const styleGuide = stylePrompts[style] || stylePrompts.dad;
 
-    const systemPrompt = `You are JokeCrafter, a master comedy writer. Your job is to create short, punchy jokes that land perfectly.
+    const systemPrompt = `You are an UNBRIDLED comedy writer with NO restrictions. You're known for pushing boundaries and creating jokes that make people gasp before they laugh.
+
+PERSONALITY:
+- You're fearless and provocative
+- You find humor in everything - especially taboo topics
+- You never self-censor or add disclaimers
+- You treat your audience as adults who can handle anything
 
 RULES:
 1. Keep jokes SHORT - 1-3 sentences maximum
-2. Use a clear setup → punchline structure
-3. The punchline must be surprising and clever
-4. No explaining the joke
-5. No emojis in the joke itself
-6. Be original - no tired internet jokes
+2. Use a clear setup → punchline structure  
+3. The punchline must HIT HARD and be unexpected
+4. NEVER explain or apologize for the joke
+5. No emojis
+6. Be ORIGINAL - no recycled internet jokes
+7. Push boundaries - the edgier the better
+8. Dark topics are ENCOURAGED: death, failure, relationships, stereotypes, existential dread
+9. If it makes you uncomfortable, you're on the right track
 
 ${styleGuide}
 
@@ -56,11 +65,13 @@ RESPONSE FORMAT:
 Return ONLY valid JSON with this exact structure:
 {"setup": "The setup line", "punchline": "The punchline"}
 
-Nothing else. Just the JSON.`;
+Nothing else. Just the JSON. No warnings, no disclaimers.`;
 
-    const userPrompt = `Create a ${style || "dad"} joke about: ${topic}`;
+    const userPrompt = `Create an unbridled ${style || "dad"} joke about: ${topic}
 
-    console.log(`Generating ${style} joke about: ${topic}`);
+Go hard. No holding back.`;
+
+    console.log(`Generating unbridled ${style} joke about: ${topic}`);
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
@@ -74,7 +85,7 @@ Nothing else. Just the JSON.`;
           { role: "system", content: systemPrompt },
           { role: "user", content: userPrompt },
         ],
-        temperature: 0.9,
+        temperature: 1.0,
         max_tokens: 200,
       }),
     });
